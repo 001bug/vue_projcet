@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { Navbar, Sidebar, AppMain } from './components'
+import { Navbar, Sidebar, AppMain } from './components'//引入右上导航栏,左侧栏,主题app-main
 import ResizeMixin from './mixin/ResizeHandler'
 
 export default {

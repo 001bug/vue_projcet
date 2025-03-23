@@ -9,7 +9,10 @@ import getPageTitle from '@/utils/get-page-title'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login'] // no redirect whitelist
-
+/**
+ * @param to 到哪里去 from 从哪里来 next执行一定的逻辑后,必须执行的函数,类似放行
+ */
+//路由前置守卫,每一次跳转前都会执行这个函数,类似springmvc的拦截器,这是一个回调函数
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
@@ -57,7 +60,7 @@ router.beforeEach(async(to, from, next) => {
     }
   }
 })
-
+// 路由导航守卫
 router.afterEach(() => {
   // finish progress bar
   NProgress.done()
