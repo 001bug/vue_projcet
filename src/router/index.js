@@ -35,13 +35,13 @@ export const constantRoutes = [
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
-  },
+  },//URL为login的时候调用views/login/index组件来渲染
 
   {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
-  },
+  },//这个和上面的,都叫一级路由
 
   {
     path: '/',
@@ -75,7 +75,7 @@ export const constantRoutes = [
         meta: { title: 'Tree', icon: 'tree' }
       }
     ]
-  },
+  },//1.0110100 1.1001011 1.1001100
 
   {
     path: '/form',

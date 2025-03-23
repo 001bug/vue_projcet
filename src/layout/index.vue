@@ -1,11 +1,15 @@
 <template>
+  <!-- 这是一个大的背景图 -->
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+    <!-- 左侧栏 -->
     <sidebar class="sidebar-container" />
     <div class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
+        <!-- 右上导航栏 -->
         <navbar />
       </div>
+      <!-- 右下主题部分 -->
       <app-main />
     </div>
   </div>
