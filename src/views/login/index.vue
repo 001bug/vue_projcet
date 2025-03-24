@@ -80,7 +80,8 @@ export default {
       //validate类似Elements-UI内部的方法
       this.$refs.form.validate((isOK)=>{
         if(isOK){
-          alert('校验通过')
+          //user模块名称(namespaces的名称),login是action
+          this.$store.dispatch('user/login',this.loginForm)
         }
       })
     }
