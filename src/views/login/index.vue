@@ -5,20 +5,22 @@
       <h1>登录</h1>
       <el-card shadow="never" class="login-card">
         <!--登录表单-->
-        <el-form>
-          <el-form-item>
-            <el-input placeholder="请输入手机号"/>
+        <!-- 注册登录表单组件,引用名为"form" -->
+        <el-form ref="form" :model="loginForm" :rules="loginRules">
+          <el-form-item prop="mobile">
+            <!-- v-model类似java中的getter/setter方法 -->
+            <el-input v-model="loginForm.mobile" placeholder="请输入手机号"/>
           </el-form-item>
-          <el-form-item>
-            <el-input placeholder="请输入密码"/>
+          <el-form-item prop="password">
+            <el-input v-model="loginForm.password" show-password placeholder="请输入密码"/>
           </el-form-item>
-          <el-form-item>
-            <el-checkbox>
+          <el-form-item prop="isAgree">
+            <el-checkbox v-model="loginForm.isAgree">
               用户平台使用协议
             </el-checkbox>
           </el-form-item>
           <el-form-item>
-            <el-button sytle="350" type="primary">登录</el-button>
+            <el-button @click="login" sytle="350" type="primary">登录</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -27,7 +29,62 @@
 </template>
 <script>
 export default {
-  name : "Login"
+  name : "Login",
+  //类似java中的POJO类, 比如LoginForm
+  data(){
+    return {
+      loginForm: {
+        mobile: '',
+        password: '',
+        isAgree: false
+      },
+      //这是表单的验证机制,类似springboot中的@NotNull,@Pattern,@Valid
+      loginRules: {
+        mobile: [{
+          required: true,
+          message: '请输入手机号',
+          trigger: 'blur'
+        },
+        {
+          pattern: /^1[3-9]\d{9}$/,
+          message: "手机号格式错误",
+          trigger: 'blur'
+        }],
+        password: [{
+          required: true,
+          message: '请输入密码',
+          trigger: 'blur'
+        },{
+          min:5,
+          max:16,
+          message: '密码长度5-16位之间',
+          trigger: 'blur'
+        }],
+        //required只能检测null,undefined
+        //这里写一个自定义校验属性
+        isAgree: [{
+          /*
+          @Param:rule校验规则
+          value:校验的值
+          callback回调函数 - 通知校验结果的方法 ,成功返回回调接口,失败返回错误信息
+          */
+          validator:(rule,value,callback)=>{
+            value ? callback() : callback(new Error("您必须勾选用户平台使用协议"))
+          }
+        }]
+      }
+    }
+  },
+  methods: {
+    login(){
+      //validate类似Elements-UI内部的方法
+      this.$refs.form.validate((isOK)=>{
+        if(isOK){
+          alert('校验通过')
+        }
+      })
+    }
+  }
 }
 </script>
 <style lang="scss">
