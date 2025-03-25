@@ -19,8 +19,11 @@ router.beforeEach(async(to,from,next)=>{
             //执行完这个函数并没有执行后置守卫,所以要手动关闭进度条
             nprogress.done()
         }else{
-            //判断是否获取了用户的资料
-            if(!store.getters.userId){
+            //判断是否获取了用户的资料, 因为没接口暂时注释掉
+            // if(!store.getters.userId){
+            //     await store.dispatch("user/getUserInfo")
+            // }
+            if(false){
                 await store.dispatch("user/getUserInfo")
             }
             next()//放行
