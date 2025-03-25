@@ -28,6 +28,7 @@
   </div>
 </template>
 <script>
+import request from '@/utils/request'
 export default {
   name : "Login",
   //类似java中的POJO类, 比如LoginForm
