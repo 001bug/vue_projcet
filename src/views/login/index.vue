@@ -35,9 +35,9 @@ export default {
   data(){
     return {
       loginForm: {
-        mobile: '',
-        password: '',
-        isAgree: false
+        mobile: process.env.NODE_ENV==="development"? '13800000002':'',
+        password: process.env.NODE_ENV==="development"? '123456':'',
+        isAgree: process.env.NODE_ENV==="development" ? true : false
       },
       //这是表单的验证机制,类似springboot中的@NotNull,@Pattern,@Valid
       loginRules: {
@@ -76,13 +76,21 @@ export default {
       }
     }
   },
+  created(){
+    this.$store.dispatch('user/getUserInfo')
+  },
   methods: {
     login(){
+      console.log('@@@',process.env.NODE_ENV);
+      alert(process.env.NODE_ENV)
       //validate类似Elements-UI内部的方法
-      this.$refs.form.validate((isOK)=>{
+      this.$refs.form.validate(async(isOK)=>{
         if(isOK){
           //user模块名称(namespaces的名称),login是action
-          this.$store.dispatch('user/login',this.loginForm)
+          await this.$store.dispatch('user/login',this.loginForm)
+          //Vuex中的action 返回的是promise
+          //跳转主页
+          this.$router.push('/')
         }
       })
     }

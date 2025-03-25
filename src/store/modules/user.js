@@ -1,7 +1,9 @@
 import { getToken,setToken,removeToken } from "@/utils/auth"
+import { login , getUserInfo} from '@/api/user'
 
 const state={//类似java中开一个线程存储信息.
-  token: getToken()
+  token: getToken(),
+  userInfo: {}
 }
 
 const mutations={
@@ -13,6 +15,9 @@ const mutations={
   removeToken(state){
     state.token=null
     removeToken()
+  },
+  setUserInfo(state,userInfo){
+    state.userInfo=userInfo
   }
 }
 
@@ -26,10 +31,15 @@ const actions={
     console.log(data)
     //然后在这里调用登录接口
     //然后返回一个token
-    //前端发起一个异步登录请求, 这是异步的
-    const token =await login(data)
+    //前端发起一个异步登录请求, 这是异步的.因为这里没有后端接口,所以暂时注释掉
+    //const result = await login(data)
     console.log("设置token")
-    context.commit('setToken',token)//暂时把token设置为123456
+    context.commit('setToken',"666")//暂时把token设置为123456
+  },
+  //获取用户的基本信息
+  async getUserInfo(context){
+     const result = await getUserInfo()
+     context.commit('setUserInfo',result)
   }
 }
 

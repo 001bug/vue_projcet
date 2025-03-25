@@ -3,6 +3,7 @@ const getters = {
   device: state => state.app.device,
   token: state => state.user.token,
   avatar: state => state.user.avatar,
+  userId: state=> state.user.userInfo.userId,
   name: state => state.user.name
 }//更有利于便捷访问
 export default getters
