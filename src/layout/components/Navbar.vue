@@ -37,20 +37,20 @@
     </div>
     <!-- 放置dialog -->
     <!-- sync修饰可以接受子组件传过来的事件和值 -->
-     <el-dialog width="500px" title="修改密码" :visible.sync="showDialog">
-        <el-form label-width="120px">
-          <el-form-item label="旧密码">
-            <el-input show-password size="small"/>
+     <el-dialog width="500px" title="修改密码" @close="btnCancel" :visible.sync="showDialog">
+      <el-form label-width="120px" ref="passForm" :model="passForm" :rules="rules">
+          <el-form-item label="旧密码" prop="oldPassword">
+            <el-input show-password size="small" v-model="passForm.oldPassword"/>
           </el-form-item>
-          <el-form-item label="新密码">
-            <el-input show-password size="small"/>
+          <el-form-item label="新密码" prop="newPassword">
+            <el-input show-password size="small" v-model="passForm.newPassword"/>
           </el-form-item>
-          <el-form-item label="重复密码">
-            <el-input show-password size="small"/>
+          <el-form-item label="重复密码" prop = "confirmPassword">
+            <el-input show-password size="small" v-model="passForm.confirmPassword"/>
           </el-form-item>
           <el-form-item>
-            <el-button size="mini" type="primayr">确认修改</el-button>
-            <el-button size="mini">取消</el-button>
+            <el-button size="mini" type="primary" @click="btnOK">确认修改</el-button>
+            <el-button size="mini" @click="btnCancel">取消</el-button>
           </el-form-item>
         </el-form>
      </el-dialog>
@@ -61,6 +61,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import {updatePassword} from '@/api/user'
 
 export default {
   data(){
@@ -68,7 +69,7 @@ export default {
       passForm:{
         oldPassword: '',//旧密码
         newPassword: '',//新密码
-        confirmPasword: ''//确认密码
+        confirmPassword: ''//确认密码
       },
       rules:{
         oldPassword:[{required:true,message:'旧密码不能为空',trigger:'blur'}],
@@ -78,7 +79,7 @@ export default {
           max:16,
           message:'新密码的长度为6-16'
         }],//新密码
-        confirmPasword:[{required:true,message:'重复密码不能为空',trigger:'blur'},
+        confirmPassword:[{required:true,message:'重复密码不能为空',trigger:'blur'},
           {
             trigger:'blur',
             /**
@@ -94,8 +95,7 @@ export default {
                 callback(new Error('重复密码和新密码输入不一致'))
               }
             }
-          }
-        ]
+          }]
       },
       showDialog: false
     }
@@ -122,6 +122,24 @@ export default {
     },
     updatePassword(){
       this.showDialog=true
+    },
+    //确定修改的方法
+    btnOK(){
+      this.$refs.passForm.validate(async isOK=>{
+        if(isOK){
+          //调用接口
+          await updatePassword(this.passForm)
+          this.$message.success('修改密码成功')
+          this.btnCancel()
+        }
+      })
+    },
+    //取消修改密码
+    btnCancel(){
+      //重置表单
+      this.$refs.passForm.resetFields()
+      //关闭弹窗
+      this.showDialog=false
     }
   }
 }

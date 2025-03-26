@@ -14,3 +14,15 @@ export function getUserInfo(){
     method: 'get'
   })
 }
+/**
+ * 
+ * @param {*} data 
+ * @returns 这个data发给后端的数据,包括了新旧密码
+ */
+export function updatePassword(data){
+  return request({
+    url:'/sys/user/updatePass',
+    method: 'put',
+    data
+  })
+}
