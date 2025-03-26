@@ -23,7 +23,8 @@
           <a target="_blank" href="https://github.com/001bug/vue_projcet">
             <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
+          <!-- prevent阻止默认事件 -->
+          <a target="_blank" @click.prevent="updatePassword()">
             <el-dropdown-item>修改密码</el-dropdown-item>
           </a>
           <!-- native事件的修饰符 -->
@@ -34,6 +35,25 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <!-- 放置dialog -->
+    <!-- sync修饰可以接受子组件传过来的事件和值 -->
+     <el-dialog width="500px" title="修改密码" :visible.sync="showDialog">
+        <el-form label-width="120px">
+          <el-form-item label="旧密码">
+            <el-input show-password size="small"/>
+          </el-form-item>
+          <el-form-item label="新密码">
+            <el-input show-password size="small"/>
+          </el-form-item>
+          <el-form-item label="重复密码">
+            <el-input show-password size="small"/>
+          </el-form-item>
+          <el-form-item>
+            <el-button size="mini" type="primayr">确认修改</el-button>
+            <el-button size="mini">取消</el-button>
+          </el-form-item>
+        </el-form>
+     </el-dialog>
   </div>
 </template>
 
@@ -43,6 +63,43 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
 export default {
+  data(){
+    return {
+      passForm:{
+        oldPassword: '',//旧密码
+        newPassword: '',//新密码
+        confirmPasword: ''//确认密码
+      },
+      rules:{
+        oldPassword:[{required:true,message:'旧密码不能为空',trigger:'blur'}],
+        newPassword:[{required:true,message:'新密码不能为空',trigger:'blur'},{
+          trigger:'blur',
+          min:6,
+          max:16,
+          message:'新密码的长度为6-16'
+        }],//新密码
+        confirmPasword:[{required:true,message:'重复密码不能为空',trigger:'blur'},
+          {
+            trigger:'blur',
+            /**
+             * 自定义校验规则,这里为什么要用箭头函数
+             * @param rule 规则
+             * @param value 传入的参数,这里是重复密码
+             * @param callback 必须调用的回调函数
+             */
+            validator:(rule,value,callback)=>{
+              if(this.passForm.newPassword===value){
+                callback()
+              }else{
+                callback(new Error('重复密码和新密码输入不一致'))
+              }
+            }
+          }
+        ]
+      },
+      showDialog: false
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger
@@ -62,6 +119,9 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    updatePassword(){
+      this.showDialog=true
     }
   }
 }
