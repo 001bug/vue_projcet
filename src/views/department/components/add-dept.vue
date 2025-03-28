@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { getDepartment ,getManagerList,addDepartment} from '@/api/department';
+import { getDepartment ,getManagerList,addDepartment,getDepartmentDetail} from '@/api/department';
 
     export default{
         name: 'AddDept',
@@ -94,6 +94,11 @@ import { getDepartment ,getManagerList,addDepartment} from '@/api/department';
                                 trigger:'blur',
                                 validator: async(rule,value,callback)=>{
                                     let result=await getDepartment()
+                                    //判断当前是否是编辑模式
+                                    if(this.formData.id){
+                                        //编辑场景, 排除自身.不要被查重校验
+                                        result=result.filter(item=>item.id!== this.formData.id)
+                                    }
                                     if(result.some(item=>item.name===value)){
                                         callback(new Error('部门中已经有该名称了'))
                                     }else{
@@ -124,6 +129,13 @@ import { getDepartment ,getManagerList,addDepartment} from '@/api/department';
                         this.close()
                     }
                 })
+            },
+            //获取组织的详细数据
+            getDepartmentDetail(){
+                //调用获取详细信息的api接口,但是因为没有对应的后端接口,暂时注释
+                //const result = await getDepartmentDetail(this.currentNodeId)
+                this.formData=result
+                console.log("1234")
             }
         },
     }

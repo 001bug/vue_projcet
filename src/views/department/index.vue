@@ -29,7 +29,8 @@
         </div>
         <!-- 放置弹层 -->
         <!-- 表示会接受子组件的事件 update:showDialog,值=>属性 -->
-        <add-dept :current-node-id="currentNodeId" :show-dialog.sync="showDialog" @udpateDepartment="getDepartment"/>
+        <!-- ref可以获取dom实例对象, 也可以获取自定义组件的实例对象 -->
+        <add-dept ref="addDept" :current-node-id="currentNodeId" :show-dialog.sync="showDialog" @udpateDepartment="getDepartment"/>
     </div>
 </template>
 <script>
@@ -67,6 +68,17 @@ import AddDept from './components/add-dept.vue'
                     //添加子部门
                     this.showDialog=true //显示弹层
                     this.currentNodeId=id
+                }else if(type==='edit'){
+                    //编辑部门的场景
+                    this.showDialog=true
+                    //记录id,要用它获取数据
+                    this.currentNodeId=id
+                    //更新props-异步方法造成的数据不一致问题
+                    //要在子组件获取数据
+                    //父组件调用子组件的方法来获取数据
+                    this.$nextTick(()=>{
+                        this.$refs.addDept.getDepartmentDetail()//这个等同于子组件的this
+                    }) 
                 }
             }
         }
