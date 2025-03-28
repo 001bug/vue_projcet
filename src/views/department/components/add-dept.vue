@@ -19,8 +19,8 @@
                 <!-- 按钮 justify水平方向的设置-->
                 <el-row type="flex" justify="center">
                     <el-col :span="12">
-                        <el-button size="mini" type="primary">确定</el-button>
-                        <el-button size="mini">取消</el-button>
+                        <el-button size="mini" type="primary" @click="btnOK">确定</el-button>
+                        <el-button size="mini" @click="close">取消</el-button>
                     </el-col>
                 </el-row>
             </el-form-item>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { getDepartment ,getManagerList} from '@/api/department';
+import { getDepartment ,getManagerList,addDepartment} from '@/api/department';
 
     export default{
         name: 'AddDept',
@@ -43,10 +43,11 @@ import { getDepartment ,getManagerList} from '@/api/department';
                 default:null
             }
         },
-        created(){
-            //创建初始化函数, 初始化的时候把部门负责人的数据从后端拉取下来
-            this.getManagerList()
-        },
+        //没有接口,不能调用
+        // created(){
+        //     //创建初始化函数, 初始化的时候把部门负责人的数据从后端拉取下来
+        //     this.getManagerList()
+        // },
         data(){
             return{
                 managerList:[],//存储负责人列表
@@ -106,10 +107,23 @@ import { getDepartment ,getManagerList} from '@/api/department';
         },
         methods :{
             close(){
+                //修改父组件的值 , 通过子组件修改父组件
+                this.$refs.addDept.resetFields()//重置表单
                 this.$emit('update:showDialog',false)
             },
             async getManagerList(){
                 this.managerList = await getManagerList()
+            },
+            btnOK(){
+                this.$refs.addDept.validate(async isOK=>{
+                    if(isOK){
+                        await addDepartment({...this.formData,pid:this.currentNodeId})
+                        //通知父组件来更新?
+                        this.$emit("updateDepartment")
+                        //this.$message.success('新增部门成功')
+                        this.close()
+                    }
+                })
             }
         },
     }

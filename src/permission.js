@@ -4,7 +4,7 @@ import 'nprogress/nprogress.css';
 import store from '@/store'
 
 //请求的白名单
-const whiteList=['/login','/404' ]
+const whiteList=['/login','/404','/' ]
 /**
  * @param to 到哪里去 from 从哪里来 next执行一定的逻辑后,必须执行的函数,类似放行
  */
