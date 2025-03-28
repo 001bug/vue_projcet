@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { getDepartment } from '@/api/department';
+
     export default{
         name: 'AddDept',
         props:{
@@ -55,17 +57,36 @@
                     code:[{required:true,message:'部门编码不能为空',trigger:'blur'},
                         {
                             min:2,max:10,message:'部门编码的长度为2-10个字符',trigger:'blur'
+                        },{
+                            //失去焦点就触发
+                            trigger:'blur',
+                            //这里写一个回调函数,用来向后端获取数据然后校验数据是否重复
+                            validator: async(rule,value,callback)=>{
+                                //调用api的getDepartment方法
+                                let result=await getDepartment()
+                                if(result.some(item=>item.code===value)){
+                                    callback(new Error('部门中已经有该编码了'))
+                                }else{
+                                    callback()
+                                }
+                            }
                         }
                     ],//部门编码
-                    introduce:[{required:true,message:'部门介绍不能为空',trigger:'blur'},{
-                        min:1,max:100,message:'部门介绍的长度为1-100个字符',trigger:'blur'
-                    }],//部门介绍
+                    introduce:[{required:true,message:'部门介绍不能为空',trigger:'blur'},
+                        {
+                            min:1,max:100,message:'部门介绍的长度为1-100个字符',trigger:'blur'
+                        }
+                    ],//部门介绍
                     managerId:[{required:true,message:'部门的负责人不能为空',trigger:'blur'},
                         {
-                            min:2,max:10,message:''
+                            min:2,max:10,message:'部门介绍要在1-100字符以内',trigger:'blur'
                         }
                     ],
-                    name:[{required:true,message:'部门的名称不能为空',trigger:'blur'}]//部门名称
+                    name:[{required:true,message:'部门的名称不能为空',trigger:'blur'},
+                        {
+                            min:2,max:10,message:'部门名称要在1-10z字符以内',trigger:'blur'
+                        }
+                    ]//部门名称
                 }
             }
         },
