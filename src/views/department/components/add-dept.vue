@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { getDepartment } from '@/api/department';
+import { getDepartment ,getManagerList} from '@/api/department';
 
     export default{
         name: 'AddDept',
@@ -42,6 +42,10 @@ import { getDepartment } from '@/api/department';
                 type: Number,
                 default:null
             }
+        },
+        created(){
+            //创建初始化函数, 初始化的时候把部门负责人的数据从后端拉取下来
+            this.getManagerList()
         },
         data(){
             return{
@@ -85,6 +89,16 @@ import { getDepartment } from '@/api/department';
                     name:[{required:true,message:'部门的名称不能为空',trigger:'blur'},
                         {
                             min:2,max:10,message:'部门名称要在1-10z字符以内',trigger:'blur'
+                        },{
+                                trigger:'blur',
+                                validator: async(rule,value,callback)=>{
+                                    let result=await getDepartment()
+                                    if(result.some(item=>item.name===value)){
+                                        callback(new Error('部门中已经有该名称了'))
+                                    }else{
+                                        callback()
+                                    }
+                                }
                         }
                     ]//部门名称
                 }
@@ -93,7 +107,10 @@ import { getDepartment } from '@/api/department';
         methods :{
             close(){
                 this.$emit('update:showDialog',false)
+            },
+            async getManagerList(){
+                this.managerList = await getManagerList()
             }
-        }
+        },
     }
 </script>
