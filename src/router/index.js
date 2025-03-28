@@ -42,7 +42,7 @@ export const constantRoutes = [
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
-  },//URL为login的时候调用views/login/index组件来渲染
+  },//URL为login的时候调用views/login/index组件来渲染,类似javamvc机制
 
   {
     path: '/404',
