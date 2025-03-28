@@ -10,7 +10,7 @@
                         <el-col>{{ data.name }}</el-col>
                         <el-col :span="4">
                             <span class="tree-manager">{{ data.managerName }}</span>
-                            <!-- 下拉菜单 -->
+                            <!-- 下拉菜单,$event表示下拉菜单的类型这里有很大的疑问 -->
                             <el-dropdown @command="operateDept($event,data.id)">
                                 <span class="el-dropdown-link">
                                     操作<i class="el-icon-arrow-down el-icon--right"/>
@@ -41,6 +41,7 @@ import AddDept from './components/add-dept.vue'
         components:{AddDept},
         data(){
             return {
+                currentNodeId: 1,
                 depts:[{name:'日汐科技', managerName:'管理员',children:[{
                     name: '总裁办',
                     managerName: '张三'
