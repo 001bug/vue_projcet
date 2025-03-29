@@ -66,10 +66,22 @@ import { getDepartment ,getManagerList,addDepartment,getDepartmentDetail} from '
                             //失去焦点就触发
                             trigger:'blur',
                             //这里写一个回调函数,用来向后端获取数据然后校验数据是否重复
+                            /**
+                             * 
+                             * @param rule 
+                             * @param value 输入
+                             * @param callback 
+                             */
                             validator: async(rule,value,callback)=>{
-                                //调用api的getDepartment方法
+                                //获取当前的数据,这边因为没有后端接口,应该先不启用
                                 let result=await getDepartment()
-                                if(result.some(item=>item.code===value)){
+                                //排除自身的数据
+                                if(this.formData.id){
+                                    //在result中不属于formData中的数据复写在新数组中
+                                    result = result.filter(item=>item.id !== this.formData.id)
+                                }
+                                //判断新的数据有没有在旧的数据中
+                                if(result.some(item=>item.code === value)){
                                     callback(new Error('部门中已经有该编码了'))
                                 }else{
                                     callback()
@@ -122,11 +134,20 @@ import { getDepartment ,getManagerList,addDepartment,getDepartmentDetail} from '
             btnOK(){
                 this.$refs.addDept.validate(async isOK=>{
                     if(isOK){
-                        await addDepartment({...this.formData,pid:this.currentNodeId})
-                        //通知父组件来更新?
-                        this.$emit("updateDepartment")
-                        //this.$message.success('新增部门成功')
-                        this.close()
+                        let msg='新增'
+                        //通过formData中的id判断场景, 如果有id说明已从后端拿到数据
+                        if(this.formData.id){
+                            //编辑场景
+                            msg='更新'
+                            await updateDepartment(this.formData)
+                        }else{
+                            //新增场景
+                            await addDepartment({...this.formData,pid: this.currentNodeId})
+                            //通知父组件来更新?
+                            this.$emit("updateDepartment")
+                            this.$message.success('${msg}部门成功')
+                            this.close()
+                        }
                     }
                 })
             },
