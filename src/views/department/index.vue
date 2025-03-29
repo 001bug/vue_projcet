@@ -34,7 +34,7 @@
     </div>
 </template>
 <script>
-import {getDepartment} from '@/api/department'
+import {getDepartment,delDepartment} from '@/api/department'
 import {transListToTreeDate} from '@/utils'
 import AddDept from './components/add-dept.vue'
     export default{
@@ -79,6 +79,13 @@ import AddDept from './components/add-dept.vue'
                     this.$nextTick(()=>{
                         this.$refs.addDept.getDepartmentDetail()//这个等同于子组件的this
                     }) 
+                }else{
+                    //删除部门
+                    this.$confirm('确认删除此部门').then(async()=>{
+                        await delDepartment(id)
+                        this.$message.success(id)
+                        this.getDepartment()
+                    })
                 }
             }
         }
