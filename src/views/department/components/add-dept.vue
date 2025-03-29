@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="新增部门" :visible="showDialog" @class="close">
+    <el-dialog :title="showTitle" :visible="showDialog" @class="close">
         <el-form label-width="120px" ref="addDept" :model="formData" :rules="rules">
             <el-form-item prop="name" label="部门名称">
                 <el-input v-model="formData.name" placeholder="2-10个字符" style="width:80%" size="mini"/>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { getDepartment ,getManagerList,addDepartment,getDepartmentDetail} from '@/api/department';
+import { getDepartment ,getManagerList,addDepartment,getDepartmentDetail,updateDepartment} from '@/api/department';
 
     export default{
         name: 'AddDept',
@@ -122,10 +122,26 @@ import { getDepartment ,getManagerList,addDepartment,getDepartmentDetail} from '
                 }
             }
         },
+        //computed叫计算属性,根据data和props的值计算出新的值.类似于java中的getter方法.该数据具有缓存特性
+        computed:{
+            showTitle(){
+                //根据是否有id显示编辑部门和新增部门
+                return this.formData.id ? '编辑部门':'新增部门'
+            }
+        },
         methods :{
             close(){
+                //关闭的时候清空表单数据,这段代码解决了下面resetFields方法不重置id的缺陷
+                //因为我直接赋值了一个新对象,id自然会变为空
+                this.formData={
+                    code: '',
+                    introduce: '',
+                    managerId: '',
+                    name: '',
+                    pid: ''
+                }
                 //修改父组件的值 , 通过子组件修改父组件
-                this.$refs.addDept.resetFields()//重置表单
+                this.$refs.addDept.resetFields()//重置表单,注意只能重置模版中绑定的数据
                 this.$emit('update:showDialog',false)
             },
             async getManagerList(){
@@ -134,6 +150,7 @@ import { getDepartment ,getManagerList,addDepartment,getDepartmentDetail} from '
             btnOK(){
                 this.$refs.addDept.validate(async isOK=>{
                     if(isOK){
+                        //不同场景使用不同的信息提示
                         let msg='新增'
                         //通过formData中的id判断场景, 如果有id说明已从后端拿到数据
                         if(this.formData.id){
@@ -145,16 +162,16 @@ import { getDepartment ,getManagerList,addDepartment,getDepartmentDetail} from '
                             await addDepartment({...this.formData,pid: this.currentNodeId})
                             //通知父组件来更新?
                             this.$emit("updateDepartment")
-                            this.$message.success('${msg}部门成功')
+                            this.$message.success(`${msg}部门成功`)
                             this.close()
                         }
                     }
                 })
             },
             //获取组织的详细数据
-            getDepartmentDetail(){
+            async getDepartmentDetail(){
                 //调用获取详细信息的api接口,但是因为没有对应的后端接口,暂时注释
-                //const result = await getDepartmentDetail(this.currentNodeId)
+                const result = await getDepartmentDetail(this.currentNodeId)
                 this.formData=result
                 console.log("1234")
             }
