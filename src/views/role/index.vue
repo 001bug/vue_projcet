@@ -39,14 +39,15 @@
     <el-dialog width="500px" title="新增角色" :visible.sync="showDialog">
       <!-- 表单内容 -->
        <el-form label-width="120px">
-        <el-form-item label="角色名称">
-          <el-input style="width: 300px" size="mini"/>
+        <el-form-item label="角色名称" prop="name">
+          <el-input :active-value="1" :inactive-value="0" v-model="roleForm.name"style="width: 300px" size="mini"/>
         </el-form-item>
+        <!-- 因为这个不需要校验, 就不用写prop属性了 -->
         <el-form-item label="启用">
-          <el-switch size="mini"/>
+          <el-switch v-model="roleForm.state" size="mini"/>
         </el-form-item>
-        <el-form-item label="角色描述">
-          <el-input type="textarea" :rows="3" style="width:300px" size="mini"/>
+        <el-form-item label="角色描述" prop="description">
+          <el-input v-model="roleForm.description" type="textarea" :rows="3" style="width:300px" size="mini"/>
         </el-form-item>
         <el-form-item>
           <el-row type="flex"  justify="center">
@@ -71,7 +72,16 @@ export default {
       pageParams:{
         page:1,
         pagesize:5,
-        total:0
+        total:0 
+      },
+      roleForm:{
+        name: '',
+        description:'',
+        state:0
+      },
+      rules:{
+        name:[{required:true,message:'角色名称不能为空',trigger:'blur'}],
+        description:[{required:true,message:'角色描述',trigger:'blur'}]
       }
     }
   },
