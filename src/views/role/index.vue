@@ -12,6 +12,7 @@
         <el-table-column prop="state" width="200" align="center" label="启用">
           <!-- 自定义列结构,这里自定义一个启用列 -->
           <template v-slot="{row}">
+            <!-- 条件渲染 -->
             <span>{{ row.state===1?"已启用":row.state===0?"末启用":"无" }}</span>
           </template>
         </el-table-column>
@@ -27,7 +28,12 @@
       </el-table>
       <!-- 放置分页组件 -->
       <el-row type="flex" justify="end" style="height: 60px" align="middle">
-        <el-pagination layout="prev,pager,next"/>
+        <el-pagination 
+          :page-size="pageParams.pagesize"
+          :current-page="pageParams.page"
+          :total = "pageParams.total"
+          @current-change="changePage"
+          layout="prev,pager,next"/>
       </el-row>
     </div>
   </div>
@@ -38,7 +44,12 @@ export default {
   name: 'Role',
   data(){
     return {
-      list:[]
+      list:[],
+      pageParams:{
+        page:1,
+        pagesize:5,
+        total:0
+      }
     }
   },
   created(){
@@ -48,8 +59,14 @@ export default {
   },
   methods:{
     async getRoleList(){
-      const {rows}=await getRoleList()
+      const {rows,total}=await getRoleList(this.pageParams)
       this.list=rows//赋值数据
+      this.pageParams.total=total
+    },
+    //切换页面时请求新的数据
+    changePage(newPage){
+      this.pageParams.page=newPage //赋值当前页码
+      this.getRoleList()
     }
   }
 }
