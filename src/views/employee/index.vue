@@ -22,7 +22,29 @@
           <el-button size="mini">excel导出</el-button>
         </el-row>
         <!-- 表格组件 -->
+        <el-table :data="list">
+          <el-table-column align="center" label="头像" prop="staffPhoto"/>
+          <el-table-column label="姓名" prop="username"/>
+          <el-table-column label="手机号" sortable prop="mobile"/>
+          <el-table-column label="工号" sortable prop="workNumber"/>
+          <el-table-column label="聘用形式" prop="formOfEmployment"/>
+          <el-table-column label="部门" prop="departmentName"/>
+          <el-table-column label="入职时间" sortable prop="timeOfEntry"/>
+          <el-table-column label="操作" width="280px">
+            <template>
+              <el-button size="mini" type="text">查看</el-button>
+              <el-button size="mini" type="text">角色</el-button>
+              <el-button size="mini" type="text">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
         <!-- 分页 -->
+         <el-row style="height: 60px" align="middle" type="flex" justify="end">
+            <el-pagination
+              layout="total,prev,pager,next"
+              :total="1000"
+            />
+         </el-row>
       </div>
     </div>
   </div>
@@ -30,6 +52,7 @@
 <script>
 import {getDepartment} from '@/api/department' 
 import { transListToTreeData } from '@/utils'
+import {getEmployeeList} from '@/api/employee'
 export default {
   name: 'Employee',
   data(){
@@ -41,7 +64,8 @@ export default {
       },
       queryParams:{
         departmentId: null
-      }
+      },
+      list:[]
     }
   },
   created(){
@@ -59,9 +83,18 @@ export default {
         //此时意味着树渲染完毕
         this.$refs.deptTree.setCurrentKey(this.queryParams.departmentId)
       })
+      //这个时候参数记录了id
+      this.getEmployeeList()
+    },
+    //获取员工列表的方法
+    async getEmployeeList(){
+      const {rows}=await getEmployeeList(this.queryParams)
+      this.list=rows
     },
     selectNode(node){
-      this.queryParams.departmentId=node.id
+      this.queryParams.departmentId=node.id //重新记录参数
+      //在切换左侧栏的时候,重新请求更新数据
+      this.getEmployeeList()
     }
   }
 }
