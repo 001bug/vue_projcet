@@ -12,7 +12,8 @@
         <el-table-column prop="name" width="200" align="center" label="角色">
           <template v-slot="{row}">
             <!-- 条件判断 -->
-            <el-input v-if="row.isEdit" size="mini" v-model="row.editRow.name"/>
+            <!-- row.editRow.name绑定缓存数据里的数据-->
+            <el-input v-if="row.isEdit" size="mini" v-model="row.editRow.name"/> 
             <span v-else>{{ row.name }}</span>
           </template>
         </el-table-column>
@@ -85,7 +86,7 @@
   </div>
 </template>
 <script>
-import {getRoleList,addRole} from '@/api/role'
+import {getRoleList,addRole,updateRole} from '@/api/role'
 export default {
   name: 'Role',
   data(){
@@ -129,6 +130,11 @@ export default {
         //数据响应式的问题, 数据变化, 视图更新变化,添加动态属性是不具备响应式特点的,因为这些属性是没有被监控到的
         //this.$set(目标对象, 属性, 初始值)可以针对目标对象, 添加的属性添加响应式
         this.$set(item,"isEdit",false)
+        this.$set(item,'editRow',{
+          name: item.name,
+          state: item.state,
+          description: item.description
+        })
       })
     },
     //切换页面时请求新的数据
@@ -154,6 +160,25 @@ export default {
     btnEditRow(row){
       //改变行的编辑状态
       row.isEdit=true
+      row.editRow.name=row.name
+      row.editRow.state=row.state
+      row.editRow.description=row.description
+    },
+    //确定修改
+    async btnEditOK(row){
+      if(row.editRow.name&&row.editRow.description){
+        //下一步操作
+        await updateRole({...row.editRow, id: row.id})
+        //更新陈工
+        this.$message.success('更新角色成功')
+        // 更新显示数据 退出编辑状态
+        Object.assign(row,{
+          ...row.editRow,
+          isEdit: false
+        })
+      }else{
+        this.$message.warning('角色和描述不能为空')
+      }
     }
   }
 }
