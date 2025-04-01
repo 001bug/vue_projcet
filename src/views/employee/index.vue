@@ -3,8 +3,15 @@
     <div class="app-container">
       <div class="left">
         <el-input style="margin-bottom:10px" type="text" prefix-icon="el-icon-search" size="small" placeholder="输入员工姓名全员搜索"/>
+        <!-- 树形组件 -->
+        <el-tree
+          :data="depts"
+          :props="defaultProps"
+          default-expand-all
+          :expand-on-click-node="false"
+          hightlight-current
+        />
       </div>
-      <!-- 树形组件 -->
       <div class="right">
         <el-row class="opeate-tools" type="flex" justify="end">
           <el-button size="mini" type="primary">添加员工</el-button>
@@ -18,8 +25,28 @@
   </div>
 </template>
 <script>
+import {getDepartment} from '@/api/department' 
+import { transListToTreeData } from '@/utils'
 export default {
-  name: 'Employee'
+  name: 'Employee',
+  data(){
+    return {
+      depts:[], //组织数据
+      defaultProps:{
+        label: 'name',
+        children: 'children'
+      }
+    }
+  },
+  created(){
+    //this.getDepartment(),因为没有对应的后端接口,所以暂时先注销
+  },
+  methods:{
+    async getDepartment(){
+      //递归方法将列表转化为树形
+      this.depts=transListToTreeData(await getDepartment(),0)
+    }
+  }
 }
 </script>
 
