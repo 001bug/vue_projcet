@@ -73,6 +73,8 @@
 import {getDepartment} from '@/api/department' 
 import { transListToTreeData } from '@/utils'
 import {getEmployeeList,exportEmployee} from '@/api/employee'
+import FileSaver from 'file-saver'
+import ImportExcel from './components/import-excel.vue'
 export default {
   name: 'Employee',
   data(){
