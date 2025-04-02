@@ -26,11 +26,26 @@ export function getExportTemplate(){
         responseType: 'blob' //二进制文件流
     })
 }
-
+/**
+ * 
+ * @param {*} data 需要上传的数据
+ * @returns promise,因为这个是axios的方法
+ */
 export function uploadExcel(data){
     return request({
         url: '/sys/user/import',
         method: 'post',
         data //form-data类型, 因为要上传文件类型
+    })
+}
+/**
+ * 
+ * @param {*} id 删除员工的id
+ * @returns promise
+ */
+export function delEmployee(id){
+    return request({
+        method: 'delete',
+        url: `/sys/user/${id}`
     })
 }
