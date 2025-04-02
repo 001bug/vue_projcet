@@ -26,6 +26,9 @@ service.interceptors.request.use((config)=>{
  * @param 两个回调函数,成功1,失败2
  */
 service.interceptors.response.use((response)=>{
+  //先处理blob数据流的形式
+  if(response.data instanceof Blob) return response.data
+  //默认是json格式
   const {data,message,success}=response.data
   if(success){
     return data
@@ -35,7 +38,7 @@ service.interceptors.response.use((response)=>{
     return Promise.reject(new Error(message))
   }
 },async(error)=>{
-  if(error.response.status==401){
+  if(error.response.status===401){
     //说明token超时
     Message({type:'warning',message:'token超时了'})
     await store.dispatch('user/logout')//调用action退出登录

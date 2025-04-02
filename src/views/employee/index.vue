@@ -25,7 +25,7 @@
         <el-row class="opeate-tools" type="flex" justify="end">
           <el-button size="mini" type="primary">添加员工</el-button>
           <el-button size="mini">excel导入</el-button>
-          <el-button size="mini">excel导出</el-button>
+          <el-button size="mini" @click="exportEmployee">excel导出</el-button>
         </el-row>
         <!-- 表格组件 -->
         <el-table :data="list">
@@ -72,7 +72,7 @@
 <script>
 import {getDepartment} from '@/api/department' 
 import { transListToTreeData } from '@/utils'
-import {getEmployeeList} from '@/api/employee'
+import {getEmployeeList,exportEmployee} from '@/api/employee'
 export default {
   name: 'Employee',
   data(){
@@ -134,6 +134,14 @@ export default {
         this.queryParams.page=1
         this.getEmployeeList()
       },300)
+    },
+    /**
+     * 导出员工的excel
+     */
+    async exportEmployee(){
+      const result=await exportEmployee() //导出所有的员工接口
+      //然后是用npm的一个包, 保存blob格式的数据,下载到本地
+      FileSaver.saveAs(result,'员工信息表.xlsx') //下载文件
     }
   }
 }

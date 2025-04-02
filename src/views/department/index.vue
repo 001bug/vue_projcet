@@ -35,7 +35,7 @@
 </template>
 <script>
 import {getDepartment,delDepartment} from '@/api/department'
-import {transListToTreeDate} from '@/utils'
+import {transListToTreeDate} from '@/utils/index'
 import AddDept from './components/add-dept.vue'
     export default{
         name: 'Department',
