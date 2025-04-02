@@ -16,3 +16,10 @@ export function exportEmployee(){
         responseType: 'blob'
     })
 }
+
+export function getExportTemplate(){
+    return request({
+        url: '/sys/user/import/template',
+        responseType: 'blob' //二进制文件流
+    })
+}
