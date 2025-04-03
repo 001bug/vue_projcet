@@ -11,9 +11,9 @@ export default {
       icon: 'people'
     }
   },{
-    path: '/employee/detail', //员工详情的地址
+    path: '/employee/detail/:id?', //员工详情的地址
     component:()=>import('@/views/employee/detail.vue'),
-    hidden: true,
+    hidden: true, //表示隐藏在左侧菜单
     meta:{
       title: '员工详情'//显示在导航的文本
     }

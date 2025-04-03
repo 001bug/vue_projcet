@@ -61,3 +61,14 @@ export function addEmployee(data){
         data
     })
 }
+
+/**
+ * 获取员工的详细信息
+ * @param {*} id 
+ * @returns 
+ */
+export function getEmployeeDetail(id){
+    return request({
+        url: `/sys/user/${id}`
+    })
+}

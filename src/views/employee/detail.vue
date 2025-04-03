@@ -98,7 +98,7 @@
   
   <script>
   import SelectTree from './components/select-tree.vue'
-  import {addEmployee} from '@/api/employee'
+  import {addEmployee,getEmployeeDetail} from '@/api/employee'
   export default {
     components: {SelectTree},
     data(){
@@ -139,6 +139,9 @@
         }
       }
     },
+    created(){
+      //this.$route.params.id&&this.getEmployeeDetail() //如果有id,就获取一次数据
+    },
     methods:{
       saveData(){
         //校验通过成功的写法,类似java的lambada表达式
@@ -149,6 +152,9 @@
             this.$router.push('/employee')
           }
         })
+      },
+      async getEmployeeDetail(){
+        this.userInfo=await getEmployeeDetail(this.$route.params.id)
       }
     }
   }
