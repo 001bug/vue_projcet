@@ -49,3 +49,15 @@ export function delEmployee(id){
         url: `/sys/user/${id}`
     })
 }
+/**
+ * 新增员工
+ * @param {*} data 
+ * @returns 
+ */
+export function addEmployee(data){
+    return request({
+        url: '/sys/user',
+        method: 'post',
+        data
+    })
+}

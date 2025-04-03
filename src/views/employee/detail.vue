@@ -98,6 +98,7 @@
   
   <script>
   import SelectTree from './components/select-tree.vue'
+  import {addEmployee} from '@/api/employee'
   export default {
     components: {SelectTree},
     data(){
@@ -140,7 +141,14 @@
     },
     methods:{
       saveData(){
-        this.$refs.userForm.validate()
+        //校验通过成功的写法,类似java的lambada表达式
+        this.$refs.userForm.validate(async isOK=>{
+          if(isOK){
+            await addEmployee(this.userInfo)
+            this.$message.success('新增员工成功')
+            this.$router.push('/employee')
+          }
+        })
       }
     }
   }
