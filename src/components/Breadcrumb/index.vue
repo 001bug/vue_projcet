@@ -24,7 +24,7 @@ export default {
     }
   },
   created() {
-    this.getBreadcrumb()
+   //this.getBreadcrumb()
   },
   methods: {
     getBreadcrumb() {

@@ -29,8 +29,9 @@ router.beforeEach(async(to,from,next)=>{
             next()//放行
         }
     }else{
-        //没有token
-        if(whiteList.includes(to.path)){
+        //没有token选择这个whiteList.includes(to.path)
+        //因为现在需要测试,所以不需要token校验
+        if(true){
             next()//放行
         }else{
             next('/login')
