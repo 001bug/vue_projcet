@@ -27,6 +27,7 @@
                 <el-form-item label="手机" prop="mobile">
                   <el-input
                     v-model="userInfo.mobile"
+                    :disabled="!!$route.params.id"
                     size="mini"
                     class="inputW"
                   />
@@ -147,8 +148,16 @@
         //校验通过成功的写法,类似java的lambada表达式
         this.$refs.userForm.validate(async isOK=>{
           if(isOK){
-            await addEmployee(this.userInfo)
-            this.$message.success('新增员工成功')
+            if (this.$route.params.id) {
+            // 编辑模式
+            await updateEmployee(this.userInfo)
+            this.$message.success('更新员工成功')
+            } else {
+              // 新增模式
+              // 校验通过
+              await addEmployee(this.userInfo)
+              this.$message.success('新增员工成功')
+            }
             this.$router.push('/employee')
           }
         })
