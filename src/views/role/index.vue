@@ -89,10 +89,12 @@
     <el-dialog :visible.sync="showPermissionDialog" title="分配权限">
       <!-- 放置权限数据 -->
       <el-tree
+        node-key="id"
         :data="permissionData"
         :props="{ label: 'name' }"
         show-checkbox
         default-expand-all
+        :default-checked-keys="permIds"
       />
     </el-dialog>
   </div>
