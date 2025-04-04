@@ -40,3 +40,14 @@ export function delRole(id){
         method: 'delete'
     })
 }
+
+/**
+ * 获取角色的详细信息, 这里包括了权限信息
+ * @param {*} id 
+ * @returns 
+ */
+export function getRoleDetail(id) {
+    return request({
+      url: `/sys/role/${id}`
+    })
+  }
