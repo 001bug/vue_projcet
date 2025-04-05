@@ -36,6 +36,26 @@ if (process.env.NODE_ENV === 'production') {//process.env.NODE_ENV是环境变�
  Vue.use(ElementUI)//全局注册element-ui
 
 Vue.config.productionTip = false
+
+// 封装自定义指令 用来控制操作权
+Vue.directive('permission',{
+  //在指令作用的元素插入到页面完成以后触发
+  /**
+   * 
+   * @param {*} el 被指令作用的元素的dom对象
+   * @param {*} binding 
+   */
+  inserted(el,binding){
+    const points=store.state.user.userInfo?.roles?.points || []//当前用户的操作权
+    if (!points.includes(binding.value)) {
+      // 不存在就要删除或者禁用
+      el.remove() // 删除元素
+      // el.disabled = true
+      // 线上的权限数据和线下的代码进行对应
+    }
+  }
+})
+
 //创建一个vue实例, 并挂载到页面上的#app元素,同时配置路由,状态管理和根组件渲染
 new Vue({
   el: '#app',//挂载到id="app"的dom元素上
@@ -43,3 +63,4 @@ new Vue({
   store, //相当于Spring的全局Bean或缓存容器
   render: h => h(App)//渲染页面的根组件 , 指App. 可以理解为启动后加载首页的JSP模版
 })
+
