@@ -61,8 +61,6 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
-  { path: '*', redirect: '/404', hidden: true },
-  // 404 page must be placed at the end !!!
 ]
 
 //动态路由

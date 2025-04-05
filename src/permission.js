@@ -27,10 +27,10 @@ router.beforeEach(async(to,from,next)=>{
                 const filterRoutes=asyncRoutes.filter(item=>{
                     return roles.menus.includes(item.name)
                 })
-                //把刷选后的路由添加到路由表
+                //把刷选后的路由添加到路由表,
                 router.addRoutes([...filterRoutes,{path:'*',redirect:'/404',hidden:true}])
-                //路由表有信息后,路由到下个页面
-                next(to.path)
+                //路由表有信息后,需要转发一下
+                next(to.path)//目的是让路由拥有信息 , 这是router的已知缺陷
             }else{
                 next()//放行
             }
