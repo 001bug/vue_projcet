@@ -2,6 +2,7 @@ import router from "@/router";
 import nprogress from "nprogress";
 import 'nprogress/nprogress.css';
 import store from '@/store'
+import {asyncRoutes} from '@/router'
 
 //请求的白名单
 const whiteList=['/login','/404','/' ]
@@ -20,13 +21,19 @@ router.beforeEach(async(to,from,next)=>{
             nprogress.done()
         }else{
             //判断是否获取了用户的资料, 因为没接口暂时注释掉
-            // if(!store.getters.userId){
-            //     await store.dispatch("user/getUserInfo")
-            // }
-            if(false){
-                await store.dispatch("user/getUserInfo")
+            if(!store.getters.userId){
+                const {roles} = await store.dispatch("user/getUserInfo")
+                //filterRoutes,帅选后的路由
+                const filterRoutes=asyncRoutes.filter(item=>{
+                    return roles.menus.includes(item.name)
+                })
+                //把刷选后的路由添加到路由表
+                router.addRoutes([...filterRoutes,{path:'*',redirect:'/404',hidden:true}])
+                //路由表有信息后,路由到下个页面
+                next(to.path)
+            }else{
+                next()//放行
             }
-            next()//放行
         }
     }else{
         //没有token选择这个whiteList.includes(to.path)

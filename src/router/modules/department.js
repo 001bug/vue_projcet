@@ -3,6 +3,7 @@ export default{
     //路由信息
     path: '/department',//相当于java中的@RequestMapping("/department")
     component: layout,//一级路由,相当于父级模版,所有子页面的外壳
+    name: 'department',
     children:[{
         path:'',//二级路由地址为空时 表示/department 显示一级路由+二级路由
         name: 'department',//可以用来跳转 也可以标记路由
