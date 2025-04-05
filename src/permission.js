@@ -27,6 +27,8 @@ router.beforeEach(async(to,from,next)=>{
                 const filterRoutes=asyncRoutes.filter(item=>{
                     return roles.menus.includes(item.name)
                 })
+                //把动态路由的属性赋给vuex的store管理
+                store.commit('user/setRoutes',filterRoutes)
                 //把刷选后的路由添加到路由表,
                 router.addRoutes([...filterRoutes,{path:'*',redirect:'/404',hidden:true}])
                 //路由表有信息后,需要转发一下

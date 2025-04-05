@@ -1,9 +1,11 @@
 import { getToken,setToken,removeToken } from "@/utils/auth"
 import { login , getUserInfo} from '@/api/user'
+import { constantRoutes } from "@/router"
 
 const state={//类似java中开一个线程存储信息.
   token: getToken(),
-  userInfo: {}
+  userInfo: {},
+  routes: constantRoutes //静态路由的数组
 }
 
 const mutations={
@@ -18,6 +20,9 @@ const mutations={
   },
   setUserInfo(state,userInfo){
     state.userInfo=userInfo
+  },
+  setRoutes(state,newRoutes){
+    state.routes=[...constantRoutes, ...newRoutes] //静态路由+动态路由
   }
 }
 
